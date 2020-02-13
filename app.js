@@ -1,7 +1,7 @@
 let board = document.getElementById("board-area");
 
 class ticTacToe{
-    turn = ['red', 'blue'];
+    turn = ['red', '#007eff'];
     index = 0;
     constructor(){
         this.makeSquares();
@@ -74,9 +74,10 @@ class ticTacToe{
     }
     onClick(square){
         square.addEventListener('click', e =>{
-            square.removeEventListener('mouseover', e=> {});
-            square.removeEventListener('mouseout', e =>{});
-            square.style.backgroundColor = this.turn[this.index];
+            let squareClone = square.cloneNode(true);
+            square.parentNode.replaceChild(squareClone, square);
+            squareClone.style.backgroundColor = this.turn[this.index];
+            console.log(squareClone);
             this.index = (this.index + 1)%2;
         });
         return square;
