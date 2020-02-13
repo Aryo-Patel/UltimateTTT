@@ -70,7 +70,7 @@ class ticTacToe{
             board.appendChild(square);
         }
     }
-//Figure out how to make an explicit function still use square properties
+
     addHover(square){
         square.addEventListener('mouseover', e =>{
             square.classList.toggle("fade");
@@ -87,7 +87,9 @@ class ticTacToe{
             square.parentNode.replaceChild(squareClone, square);
             squareClone.style.backgroundColor = this.turn[this.index];
             this.squareClass(square, this.turn[this.index]);
-            this.checkWin(this.turn[this.index]);
+            if(this.checkWin(this.turn[this.index])){
+                alert(`Winner!`);
+            }
             this.index = (this.index + 1)%2;
 
         });
@@ -103,24 +105,23 @@ class ticTacToe{
             let count = 0;
             for(let j = 0; j < this.text_board[i].length; j++){
                 if(this.text_board[i][j] !== goalColor){
-                    console.log(`No one won in row ${i}`);
+
                     count = 1;
                 }
             }
             if(count == 0){
-                console.log(`Winner in row ${i}`);
+                return true;
             }
         }
         for(let i = 0; i < this.text_board.length; i++){
             let count = 0;
             for(let j = 0; j < 3; j++){
                 if(this.text_board[j][i] !== goalColor){
-                    console.log(`No one won in column ${i}`);
                     count = 1;
                 }
             }
             if(count == 0){
-                console.log(`Winner in column ${i}`);
+                return true;
             }
         }
         let countMain = 0;
@@ -128,19 +129,18 @@ class ticTacToe{
         for(let i = 0; i < 3; i++){
 
             if(this.text_board[i][i] !== goalColor){
-                console.log(`No one won on main diagonal`);
                 countMain = 1;
             }
 
             if(this.text_board[i][2-i] !== goalColor){
-                console.log(`No one won on opposite diagonal`);
                 countOpp = 1;
             }
 
         }
         if(countMain === 0|| countOpp ===0){
-            console.log(`Winner on a diagonal`);
+            return true;
         }
+        return false;
     }
 }
 
