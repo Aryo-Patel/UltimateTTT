@@ -6,7 +6,7 @@ class ticTacToe{
     turn = ['red', '#007eff'];
     index = 0;
     text_board = new Array(3);
-
+    container;
     constructor(){
         this.growboard();
         this.makeSquares();
@@ -18,7 +18,7 @@ class ticTacToe{
     }
 
     makeSquares(){
-
+        this.container = document.createElement('div');
         for(let i = 0; i < 9; i++){
             let square = document.createElement('div');
             square.style.width = '50px';
@@ -61,13 +61,16 @@ class ticTacToe{
                 case 8:
                     square.style.borderTop = '1px solid black';
                     square.style.borderLeft = '1px solid black';
+                    break;
                 default:
                     break;
                 
             }
             square = this.addHover(square);
             square = this.onClick(square);
-            board.appendChild(square);
+            this.container.appendChild(square);
+            this.container.classList.add('container-class');
+            board.appendChild(this.container);
         }
     }
 
@@ -144,4 +147,72 @@ class ticTacToe{
     }
 }
 
-let ticTac  = new ticTacToe();
+
+
+
+class nineBynine{
+    borderBigBoard = '2px solid grey';
+    turn = ['red', '#007eff'];
+    index = 0;
+    bigTextBoard = new Array(3);
+    constructor(){
+        this.growBigTextBoard();
+        this.makeBoard();
+        console.log(this.bigTextBoard);
+    }
+    growBigTextBoard(){
+        for(let i = 0; i < 3; i++){
+            this.bigTextBoard[i] = new Array(3);
+        }
+    }
+    makeBoard(){
+        for(let i = 0; i < 9; i++){
+            let miniBoard = new ticTacToe();
+            miniBoard.container.classList.add(""+ i);
+            this.bigTextBoard[parseInt(i/3)][i%3] = miniBoard.text_board;
+            switch(i){
+                case 0:
+                    miniBoard.container.style.borderRight = this.borderBigBoard;
+                    miniBoard.container.style.borderBottom = this.borderBigBoard;
+                    break;
+                case 1:
+                    miniBoard.container.style.border = this.borderBigBoard;
+                    miniBoard.container.style.borderTop = 'none';
+                    break;
+                case 2:
+                    miniBoard.container.style.borderLeft = this.borderBigBoard;
+                    miniBoard.container.style.borderBottom = this.borderBigBoard;
+                    break;
+                case 3:
+                    miniBoard.container.style.border = this.borderBigBoard;
+                    miniBoard.container.style.borderLeft = 'none';
+                    break;  
+                case 4:
+                    miniBoard.container.style.border = this.borderBigBoard;
+                    break;
+                case 5:
+                    miniBoard.container.style.border = this.borderBigBoard;
+                    miniBoard.container.style.borderRight = 'none';
+                    break;
+                case 6:
+                    miniBoard.container.style.borderTop = this.borderBigBoard;
+                    miniBoard.container.style.borderRight = this.borderBigBoard;
+                    break;
+                case 7:
+                    miniBoard.container.style.border = this.borderBigBoard;
+                    miniBoard.container.style.borderBottom = 'none';
+                    break;
+                case 8:
+                    miniBoard.container.style.borderTop = this.borderBigBoard;
+                    miniBoard.container.style.borderLeft = this.borderBigBoard;
+                    break;
+                default:
+                    break;
+                
+            }
+        }
+    }
+
+}
+
+let ticTac = new nineBynine();
