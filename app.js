@@ -244,34 +244,39 @@ class nineBynine{
     }
     onClick(container){
         container.addEventListener('click', e => {
+            console.log(container);
             if(e.target.classList[0] === 'square' && e.target.style.backgroundColor === 'rgb(243, 149, 149)'){
-                    if(container.classList[1] === this.lastMove || this.lastMove === -1){
-                        let containerIndex = container.classList[1];
-                        this.lastMove = e.target.classList[1];
-                        for(let i = 0; i < this.allTicTacBoards.length; i++){
-                            for(let j = 0; j < this.allTicTacBoards[i].length; j++){
-                                if(i === parseInt(containerIndex/3) && j === containerIndex%3){
-                                }
-                                else{
-                                    this.allTicTacBoards[i][j].index = (this.allTicTacBoards[i][j].index + 1)%2;
-                                }
-                            }
-                        }
-                        if(this.allTicTacBoards[parseInt(this.lastMove/3)][this.lastMove%3].won === true){
-                            this.lastMove = -1;
-                        }
-                        let allSmallBoards = document.querySelectorAll('.container-class');
-                        allSmallBoards = Array.from(allSmallBoards);
-                        console.log(this.lastMove);
-                        allSmallBoards.forEach(smallBoard =>{
-                            if(this.lastMove !== -1 && smallBoard.classList[1] !== this.lastMove){
-                                smallBoard.classList.add('freezeBehavior');
+                if(container.classList[1] === this.lastMove || this.lastMove === -1){
+                    let containerIndex = container.classList[1];
+                    this.lastMove = e.target.classList[1];
+                    for(let i = 0; i < this.allTicTacBoards.length; i++){
+                        for(let j = 0; j < this.allTicTacBoards[i].length; j++){
+                            if(i === parseInt(containerIndex/3) && j === containerIndex%3){
                             }
                             else{
-                                smallBoard.classList.remove('freezeBehavior');
+                                this.allTicTacBoards[i][j].index = (this.allTicTacBoards[i][j].index + 1)%2;
                             }
-                        })
+                        }
                     }
+                    if(this.allTicTacBoards[parseInt(this.lastMove/3)][this.lastMove%3].won === true){
+                        this.lastMove = -1;
+                    }
+                    let allSmallBoards = document.querySelectorAll('.container-class');
+                    allSmallBoards = Array.from(allSmallBoards);
+                    console.log(this.lastMove);
+                    allSmallBoards.forEach(smallBoard =>{
+                        if(this.lastMove !== -1 && smallBoard.classList[1] !== this.lastMove){
+                            smallBoard.classList.add('freezeBehavior');
+                        }
+                        else{
+                            smallBoard.classList.remove('freezeBehavior');
+                        }
+                    })
+                    setTimeout(() => {if(this.checkWin()){
+                        alert("Winner!");
+                    }}, 50);
+                    
+                }
             }
         });
     }
@@ -281,6 +286,49 @@ class nineBynine{
             let board = this.allTicTacBoards[parseInt(containerIndex/3)][containerIndex%3].board_text; 
             console.log(board);
         });
+    }
+    checkWin(){
+        for(let i = 0; i < this.allTicTacBoards.length; i++){
+            let count = 0
+            for(let j = 0; j < this.allTicTacBoards[i].length; j++){
+                if(this.allTicTacBoards[i][j].won !== true){
+                    count = 1;
+                }
+            }
+            if(count === 0){
+                return true;
+            }
+        }
+        for(let i = 0; i < 3; i++){
+            let count = 0
+            for(let j = 0; j < 3; j++){
+                if(this.allTicTacBoards[j][i].won !== true){
+                    count = 1;
+                }
+            }
+            if(count === 0){
+                return true;
+            }
+        }
+        let countMain = 0
+        for(let i = 0; i < 3; i++){
+            if(this.allTicTacBoards[i][i].won !== true){
+                countMain = 1;
+            }
+        }
+        if(countMain === 0){
+            return true;
+        }
+        let countOpp = 0
+        for(let i = 0; i < 3; i++){
+            if(this.allTicTacBoards[2-i][i].won !== true){
+                countOpp = 1;
+            }
+        }
+        if(countOpp == 0){
+            return true;
+        }
+        return false;
     }
 }
 
