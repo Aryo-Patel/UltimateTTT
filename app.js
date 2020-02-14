@@ -244,37 +244,34 @@ class nineBynine{
     }
     onClick(container){
         container.addEventListener('click', e => {
-            if(e.target.classList[0] === 'square'){
-                // let allSmallBoards = document.querySelectorAll('.container-class');
-                // allSmallBoards = Array.from(allSmallBoards);
-                // console.log(allSmallBoards);
-                // allSmallBoards.forEach(smallBoard =>{
-                //     console.log(smallBoard.classList[1]);
-                // })
-                if(container.classList[1] === this.lastMove || this.lastMove === -1){
-                    let containerIndex = container.classList[1];
-                    this.lastMove = e.target.classList[1];
-                    for(let i = 0; i < this.allTicTacBoards.length; i++){
-                        for(let j = 0; j < this.allTicTacBoards[i].length; j++){
-                            if(i === parseInt(containerIndex/3) && j === containerIndex%3){
-                                
+            if(e.target.classList[0] === 'square' && e.target.style.backgroundColor === 'rgb(243, 149, 149)'){
+                    if(container.classList[1] === this.lastMove || this.lastMove === -1){
+                        let containerIndex = container.classList[1];
+                        this.lastMove = e.target.classList[1];
+                        for(let i = 0; i < this.allTicTacBoards.length; i++){
+                            for(let j = 0; j < this.allTicTacBoards[i].length; j++){
+                                if(i === parseInt(containerIndex/3) && j === containerIndex%3){
+                                }
+                                else{
+                                    this.allTicTacBoards[i][j].index = (this.allTicTacBoards[i][j].index + 1)%2;
+                                }
+                            }
+                        }
+                        if(this.allTicTacBoards[parseInt(this.lastMove/3)][this.lastMove%3].won === true){
+                            this.lastMove = -1;
+                        }
+                        let allSmallBoards = document.querySelectorAll('.container-class');
+                        allSmallBoards = Array.from(allSmallBoards);
+                        console.log(this.lastMove);
+                        allSmallBoards.forEach(smallBoard =>{
+                            if(this.lastMove !== -1 && smallBoard.classList[1] !== this.lastMove){
+                                smallBoard.classList.add('freezeBehavior');
                             }
                             else{
-                                this.allTicTacBoards[i][j].index = (this.allTicTacBoards[i][j].index + 1)%2;
+                                smallBoard.classList.remove('freezeBehavior');
                             }
-                        }
+                        })
                     }
-                    let allSmallBoards = document.querySelectorAll('.container-class');
-                    allSmallBoards = Array.from(allSmallBoards);
-                    allSmallBoards.forEach(smallBoard =>{
-                        if(smallBoard.classList[1] !== this.lastMove){
-                            smallBoard.classList.add('freezeBehavior');
-                        }
-                        else{
-                            smallBoard.classList.remove('freezeBehavior');
-                        }
-                    })
-                }
             }
         });
     }
