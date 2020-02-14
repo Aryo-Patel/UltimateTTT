@@ -51,3 +51,7 @@ html,body{
     max-height: 170px;
     padding: 10px;
 }
+
+.freezeBehavior{
+    pointer-events: none;
+}
