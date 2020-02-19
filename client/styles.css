@@ -10,26 +10,48 @@ html,body{
 #header-banner{
     text-align: center;
     background: grey;
-    color: blue; 
+    color: blue;
 }
 #spacer{
     height: 70px;
 }
 #board-area{
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: 170px 170px 170px;
+    grid-template-rows: 170px 170px 170px;
+    row-gap: 0;
+    width: auto;
+
+}
+#board-area:after{
+    content: "";
+    display: block;
+}
+#centerer{
+    display: flex;
+}
+.square{
+    flex: 0 0 33.333%;
+    max-width: 50px;
+    transition: 0.3s;
+}
+.fade{
+    transition: 0.3s;
+}
+
+.container-class{
+    flex: 0 0 33.333%;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     flex-direction: row;
     flex-wrap: wrap;
-    max-width: 150px;
+    max-width: 170px;
+    max-height: 170px;
+    padding: 10px;
+}
 
-}
-#centerer{
-
-}
-.square{
-    flex: 0 0 33.333%;
-}
-.fade{
-    transition: 0.3s;
+.freezeBehavior{
+    pointer-events: none;
 }
