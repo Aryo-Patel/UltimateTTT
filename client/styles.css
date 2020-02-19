@@ -1,0 +1,35 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html,body{
+    height: 100%;
+    width: 100%;
+}
+#header-banner{
+    text-align: center;
+    background: grey;
+    color: blue; 
+}
+#spacer{
+    height: 70px;
+}
+#board-area{
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 150px;
+
+}
+#centerer{
+
+}
+.square{
+    flex: 0 0 33.333%;
+}
+.fade{
+    transition: 0.3s;
+}
