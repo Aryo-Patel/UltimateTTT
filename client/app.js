@@ -1,10 +1,12 @@
-//TODO: Start working on creating a 9x9 TTT game...try creating a new js
-//file for it. 
-let board = document.getElementById("board-area");
+//TODO: Bring restrictions across the server (current method is buggy and not working)
 
+
+
+let board = document.getElementById("board-area");
+let sock = io();
 class ticTacToe{
     turn = ['red', '#007eff'];
-    index = 0;
+    index = 0; 
     text_board = new Array(3);
     squares = new Array(3);
     container;
@@ -96,26 +98,29 @@ class ticTacToe{
     }
     onClick(square){
         square.addEventListener('click', e =>{
-            let index = square.classList[1];
-            let squareClone = square.cloneNode(true);
-            square.parentNode.replaceChild(squareClone, square);
-            squareClone.style.backgroundColor = this.turn[this.index];
-            this.squares[parseInt(index/3)][index%3] = squareClone;
-            this.squareClass(square, this.turn[this.index]);
-            if(this.checkWin(this.turn[this.index])){
-                for(let i = 0; i < this.squares.length; i++){
-                    for(let j= 0; j < this.squares[i].length; j++){
-                        this.won = true;
-                        let squareClone = this.squares[i][j].cloneNode(true);
-                        this.squares[i][j].parentNode.replaceChild(squareClone, this.squares[i][j]);
-                        squareClone.style.backgroundColor = this.turn[this.index];
-                    }
-                }
-            }
-            this.index = (this.index + 1)%2;
-
+           //this.click(square);
         });
         return square;
+    }
+    click(square){
+        let index = square.classList[1];
+        let squareClone = square.cloneNode(true);
+        square.parentNode.replaceChild(squareClone, square);
+        squareClone.style.backgroundColor = this.turn[this.index];
+        this.squares[parseInt(index/3)][index%3] = squareClone;
+        this.squareClass(square, this.turn[this.index]);
+        if(this.checkWin(this.turn[this.index])){
+            for(let i = 0; i < this.squares.length; i++){
+                for(let j= 0; j < this.squares[i].length; j++){
+                    this.won = true;
+                    let squareClone = this.squares[i][j].cloneNode(true);
+                    this.squares[i][j].parentNode.replaceChild(squareClone, this.squares[i][j]);
+                    squareClone.style.backgroundColor = this.turn[this.index];
+                }
+            }
+        }
+        this.index = (this.index + 1)%2;
+
     }
     squareClass(square, color) {
         let boardNumber = square.classList[1];
@@ -176,6 +181,9 @@ class nineBynine{
     bigTextBoard = new Array(3);
     allTicTacBoards = new Array(3);
     lastMove = -1;
+    playerColor = "";
+    lastMoveColor = ['blue', 'red'];
+    lastMoveIndex = 0;
     constructor(){
         this.growBigTextBoard();
         this.growAllTicTacBoards();
@@ -245,36 +253,38 @@ class nineBynine{
     onClick(container){
         container.addEventListener('click', e => {
             console.log(container);
-            if(e.target.classList[0] === 'square' && e.target.style.backgroundColor === 'rgb(243, 149, 149)'){
+            if(e.target.classList[0] === 'square' && e.target.style.backgroundColor === 'rgb(243, 149, 149)'
+            &&this.lastMoveColor[this.lastMoveIndex] !== this.playerColor){
                 if(container.classList[1] === this.lastMove || this.lastMove === -1){
                     let containerIndex = container.classList[1];
                     this.lastMove = e.target.classList[1];
-                    for(let i = 0; i < this.allTicTacBoards.length; i++){
-                        for(let j = 0; j < this.allTicTacBoards[i].length; j++){
-                            if(i === parseInt(containerIndex/3) && j === containerIndex%3){
-                            }
-                            else{
-                                this.allTicTacBoards[i][j].index = (this.allTicTacBoards[i][j].index + 1)%2;
-                            }
-                        }
-                    }
-                    if(this.allTicTacBoards[parseInt(this.lastMove/3)][this.lastMove%3].won === true){
-                        this.lastMove = -1;
-                    }
-                    let allSmallBoards = document.querySelectorAll('.container-class');
-                    allSmallBoards = Array.from(allSmallBoards);
-                    console.log(this.lastMove);
-                    allSmallBoards.forEach(smallBoard =>{
-                        if(this.lastMove !== -1 && smallBoard.classList[1] !== this.lastMove){
-                            smallBoard.classList.add('freezeBehavior');
-                        }
-                        else{
-                            smallBoard.classList.remove('freezeBehavior');
-                        }
-                    })
-                    setTimeout(() => {if(this.checkWin()){
-                        alert("Winner!");
-                    }}, 50);
+                    sock.emit('squarePressed',containerIndex, this.lastMove); 
+                    // for(let i = 0; i < this.allTicTacBoards.length; i++){
+                    //     for(let j = 0; j < this.allTicTacBoards[i].length; j++){
+                    //         if(i === parseInt(containerIndex/3) && j === containerIndex%3){
+                    //         }
+                    //         else{
+                    //             this.allTicTacBoards[i][j].index = (this.allTicTacBoards[i][j].index + 1)%2;
+                    //         }
+                    //     }
+                    // }
+                    // if(this.allTicTacBoards[parseInt(this.lastMove/3)][this.lastMove%3].won === true){
+                    //     this.lastMove = -1;
+                    // }
+                    // let allSmallBoards = document.querySelectorAll('.container-class');
+                    // allSmallBoards = Array.from(allSmallBoards);
+                    // console.log(this.lastMove);
+                    // allSmallBoards.forEach(smallBoard =>{
+                    //     if(this.lastMove !== -1 && smallBoard.classList[1] !== this.lastMove){
+                    //         smallBoard.classList.add('freezeBehavior');
+                    //     }
+                    //     else{
+                    //         smallBoard.classList.remove('freezeBehavior');
+                    //     }
+                    // })
+                    // setTimeout(() => {if(this.checkWin()){
+                    //     alert("Winner!");
+                    // }}, 50);
                     
                 }
             }
@@ -333,3 +343,59 @@ class nineBynine{
 }
 
 let ticTac = new nineBynine();
+//ticTac -> allTicTacBoards [2D array] -> squares
+sock.on('pressSquares', (containerIndex, lastMove) =>{
+    console.log(ticTac);
+    console.log(containerIndex, lastMove);
+    let board = ticTac.allTicTacBoards[parseInt(containerIndex/3)][containerIndex%3];
+    console.log(board);
+    let tile = lastMove;
+    let square = board.squares[parseInt(tile/3)][tile%3];
+    console.log(square);
+    board.click(square);
+});
+
+sock.on('updateSquareRestrictions', (containerIndex, lastMove) =>{
+    ticTac.lastMoveIndex = (ticTac.lastMoveIndex +1)%2;
+    console.log(ticTac);
+    for(let i = 0; i < ticTac.allTicTacBoards.length; i++){
+        for(let j = 0; j < ticTac.allTicTacBoards[i].length; j++){
+            if(i === parseInt(containerIndex/3) && j === containerIndex%3){
+            }
+            else{
+                ticTac.allTicTacBoards[i][j].index = (ticTac.allTicTacBoards[i][j].index + 1)%2;
+            }
+        }
+    }
+    if(ticTac.allTicTacBoards[parseInt(lastMove/3)][lastMove%3].won === true){
+        ticTac.lastMove = -1;
+    }
+    let allSmallBoards = document.querySelectorAll('.container-class');
+    allSmallBoards = Array.from(allSmallBoards);
+    allSmallBoards.forEach(smallBoard =>{
+        if(ticTac.lastMove !== -1 && smallBoard.classList[1] !== ticTac.lastMove){
+            smallBoard.classList.add('freezeBehavior');
+        }
+        else{
+            smallBoard.classList.remove('freezeBehavior');
+        }
+    })
+    setTimeout(() => {if(ticTac.checkWin()){
+        alert("Winner!");
+    }}, 50);
+})
+
+
+let displayColorName = (color) =>{
+    let displayArea = document.getElementById('color-teller');
+    if(color === 'red'){
+        displayArea.innerHTML = "You play as Red!";
+        ticTac.playerColor = "red";
+    }
+    else{
+        displayArea.innerHTML = "You play as Blue!";
+        ticTac.playerColor = "blue";
+    }
+}
+
+sock.on('playerColor', displayColorName);

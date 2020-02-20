@@ -13,9 +13,20 @@ let server = http.createServer(app);
 
 let socket = socketio(server);
 
-
+let waitingPlayer = null;
 socket.on('connection', (sock) =>{
-    
+    if(waitingPlayer){
+        sock.emit('playerColor', '007eff');
+        waitingPlayer = null;
+    }
+    else{
+        waitingPlayer = socket;
+        socket.emit('playerColor', 'red');
+    }
+    sock.on('squarePressed', (containerIndex, lastMove) =>{
+        socket.emit('pressSquares', containerIndex, lastMove);
+        socket.emit('updateSquareRestrictions', containerIndex, lastMove);
+    });
 });
 
 server.on('error', (err) =>{
