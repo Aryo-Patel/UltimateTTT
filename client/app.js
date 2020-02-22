@@ -252,12 +252,12 @@ class nineBynine{
     }
     onClick(container){
         container.addEventListener('click', e => {
-            console.log(container);
             if(e.target.classList[0] === 'square' && e.target.style.backgroundColor === 'rgb(243, 149, 149)'
             &&this.lastMoveColor[this.lastMoveIndex] !== this.playerColor){
                 if(container.classList[1] === this.lastMove || this.lastMove === -1){
                     let containerIndex = container.classList[1];
                     this.lastMove = e.target.classList[1];
+                    console.log(`Emitting last move: ${this.lastMove}`);
                     sock.emit('squarePressed',containerIndex, this.lastMove); 
                     // for(let i = 0; i < this.allTicTacBoards.length; i++){
                     //     for(let j = 0; j < this.allTicTacBoards[i].length; j++){
@@ -345,19 +345,16 @@ class nineBynine{
 let ticTac = new nineBynine();
 //ticTac -> allTicTacBoards [2D array] -> squares
 sock.on('pressSquares', (containerIndex, lastMove) =>{
-    console.log(ticTac);
-    console.log(containerIndex, lastMove);
     let board = ticTac.allTicTacBoards[parseInt(containerIndex/3)][containerIndex%3];
-    console.log(board);
     let tile = lastMove;
     let square = board.squares[parseInt(tile/3)][tile%3];
-    console.log(square);
     board.click(square);
 });
 
 sock.on('updateSquareRestrictions', (containerIndex, lastMove) =>{
     ticTac.lastMoveIndex = (ticTac.lastMoveIndex +1)%2;
-    console.log(ticTac);
+    ticTac.lastMove = lastMove;
+    console.log(ticTac.lastMove);
     for(let i = 0; i < ticTac.allTicTacBoards.length; i++){
         for(let j = 0; j < ticTac.allTicTacBoards[i].length; j++){
             if(i === parseInt(containerIndex/3) && j === containerIndex%3){
